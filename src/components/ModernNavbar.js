@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiChevronDown, FiUser, FiLock } from 'react-icons/fi';
+import Image from "next/image";
+import Link from "next/link";
 
 export default function EnhancedNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,9 +114,21 @@ export default function EnhancedNavbar() {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-2 cursor-pointer"
           >
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#567bfb] to-[#696cff] bg-clip-text text-transparent">
-              LinkFlows
-            </span>
+          <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-105">
+              <span className="flex items-center space-x-2 text-3xl font-medium text-[#567bfb]">
+                <Image
+                  src="/logo.svg"
+                  alt="linkFlows"
+                  width={50}
+                  height={50}
+                  className="w-[50px] h-[50px]"
+                  priority
+                />
+                <span className="hidden sm:inline-block font-sans tracking-tight">
+                  LinkFlows
+                </span>
+              </span>
+            </Link>
           </motion.div>
 
           {/* Desktop Navigation */}

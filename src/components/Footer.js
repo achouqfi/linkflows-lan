@@ -24,12 +24,10 @@ export default function Footer() {
   const footerLinks = {
         product: [
           { name: 'Home', href: '/' },
-          { name: 'About', href: '/about' },
-          { name: 'Services', href: '/services' },
-          { name: 'Contact', href: '/contact' }
+          { name: 'Services', href: '#services' },
+          { name: 'Contact', href: '#contact' }
         ],
         company: [
-          { name: 'About Us', href: '/about' },
           { name: 'Blog', href: '/blog' },
           { name: 'Help Center', href: '/help-center' }
         ],
