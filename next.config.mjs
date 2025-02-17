@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+      domains: ['app.linkflows.com'],
+    },
+}
 
 export default nextConfig;
