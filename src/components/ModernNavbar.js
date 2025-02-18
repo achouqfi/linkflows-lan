@@ -115,7 +115,7 @@ export default function EnhancedNavbar() {
             className="flex items-center space-x-2 cursor-pointer"
           >
           <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-105">
-              <span className="flex items-center space-x-2 text-3xl font-medium text-[#567bfb]">
+              <span className="flex items-center space-x-2 text-2xl font-semibold text-[#567bfb]">
                 <Image
                   src="/logo.svg"
                   alt="linkFlows"
@@ -124,7 +124,7 @@ export default function EnhancedNavbar() {
                   className="w-[50px] h-[50px]"
                   priority
                 />
-                <span className="hidden sm:inline-block font-sans tracking-tight">
+                <span className=" font-sans tracking-tight">
                   LinkFlows
                 </span>
               </span>

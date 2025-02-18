@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Facebook, Globe, Image as ImageIcon } from 'lucide-react';
+import Script from 'next/script';
 
 const MotionDiv = motion.div;
 
@@ -177,104 +178,153 @@ export default function FAQSection() {
     ]
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: Object.values(faqs).flat().map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
+  };
+
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Find answers to common questions about our services and features
-            </p>
-          </MotionDiv>
-        </div>
+    <>
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => {
-            const Icon = category.icon;
-            return (
-              <MotionDiv
-                key={category.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <button
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
-                    activeCategory === category.id
-                      ? 'bg-gradient-to-r from-[#696cff] to-[#567bfb] text-white shadow-md'
-                      : 'bg-white text-gray-600 hover:text-[#696cff]'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  {category.name}
-                </button>
-              </MotionDiv>
-            );
-          })}
-        </div>
-
-        {/* FAQ List */}
-        <div className="max-w-3xl mx-auto">
-          <AnimatePresence mode="wait">
+      <section 
+        className="py-20 bg-gray-50"
+        itemScope 
+        itemType="https://schema.org/FAQPage"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
             <MotionDiv
-              key={activeCategory}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-4"
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
             >
-              {faqs[activeCategory].map((faq) => (
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Find answers to common questions about our services and features
+              </p>
+            </MotionDiv>
+          </div>
+
+          {/* Category Tabs */}
+          <nav className="flex flex-wrap justify-center gap-4 mb-12" role="tablist">
+            {categories.map((category) => {
+              const Icon = category.icon;
+              return (
                 <MotionDiv
-                  key={faq.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden"
+                  key={category.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <button
-                    onClick={() => toggleQuestion(faq.id)}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left"
+                    onClick={() => setActiveCategory(category.id)}
+                    role="tab"
+                    aria-selected={activeCategory === category.id}
+                    aria-controls={`${category.id}-panel`}
+                    className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
+                      activeCategory === category.id
+                        ? 'bg-gradient-to-r from-[#696cff] to-[#567bfb] text-white shadow-md'
+                        : 'bg-white text-gray-600 hover:text-[#696cff]'
+                    }`}
                   >
-                    <span className="font-medium text-gray-900">{faq.question}</span>
-                    <MotionDiv
-                      animate={{ rotate: openQuestions.includes(faq.id) ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown className="w-5 h-5 text-gray-500" />
-                    </MotionDiv>
+                    <Icon className="w-5 h-5" />
+                    {category.name}
                   </button>
-                  
-                  <AnimatePresence>
-                    {openQuestions.includes(faq.id) && (
-                      <MotionDiv
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-6 pb-4 text-gray-600">
-                          {faq.answer}
-                        </div>
-                      </MotionDiv>
-                    )}
-                  </AnimatePresence>
                 </MotionDiv>
-              ))}
-            </MotionDiv>
-          </AnimatePresence>
+              );
+            })}
+          </nav>
+
+          {/* FAQ List */}
+          <div 
+            className="max-w-3xl mx-auto"
+            role="tabpanel"
+            id={`${activeCategory}-panel`}
+          >
+            <AnimatePresence mode="wait">
+              <MotionDiv
+                key={activeCategory}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                {faqs[activeCategory].map((faq) => (
+                  <MotionDiv
+                    key={faq.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-white rounded-xl shadow-sm overflow-hidden"
+                    itemScope
+                    itemProp="mainEntity"
+                    itemType="https://schema.org/Question"
+                  >
+                    <button
+                      onClick={() => toggleQuestion(faq.id)}
+                      className="w-full px-6 py-4 flex items-center justify-between text-left"
+                      aria-expanded={openQuestions.includes(faq.id)}
+                      aria-controls={`answer-${faq.id}`}
+                    >
+                      <span 
+                        className="font-medium text-gray-900"
+                        itemProp="name"
+                      >
+                        {faq.question}
+                      </span>
+                      <MotionDiv
+                        animate={{ rotate: openQuestions.includes(faq.id) ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-gray-500" />
+                      </MotionDiv>
+                    </button>
+                    
+                    <AnimatePresence>
+                      {openQuestions.includes(faq.id) && (
+                        <MotionDiv
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                          id={`answer-${faq.id}`}
+                          itemScope
+                          itemProp="acceptedAnswer"
+                          itemType="https://schema.org/Answer"
+                        >
+                          <div 
+                            className="px-6 pb-4 text-gray-600"
+                            itemProp="text"
+                          >
+                            {faq.answer}
+                          </div>
+                        </MotionDiv>
+                      )}
+                    </AnimatePresence>
+                  </MotionDiv>
+                ))}
+              </MotionDiv>
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
